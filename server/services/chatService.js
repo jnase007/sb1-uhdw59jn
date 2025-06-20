@@ -45,7 +45,7 @@ export class ChatService {
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages,
-        max_tokens: 300,
+        max_tokens: 400,
         temperature: 0.7,
         presence_penalty: 0.1,
         frequency_penalty: 0.1
@@ -82,34 +82,59 @@ export class ChatService {
   }
 
   getSystemPrompt() {
-    return `You are a friendly, professional chatbot for Brandastic, a leading digital marketing and web design agency. 
+    return `You are Justin's AI assistant for Brandastic, a leading digital marketing and web design agency. You represent Justin (the president) and the Brandastic team.
 
 ABOUT BRANDASTIC:
 ${brandkDb.services}
 
-YOUR ROLE:
-- Provide accurate, concise answers about Brandastic's services
-- Use a professional yet friendly, conversational tone
-- Always prioritize booking consultation calls for detailed discussions
-- For pricing questions, always suggest booking a call for custom quotes
-- Keep responses under 150 words when possible
+PRICING INFORMATION:
+WEB DESIGN:
+- Business Website: $2,500 - $5,000 (2-4 weeks)
+- Advanced Website: $5,000 - $10,000 (4-6 weeks)  
+- E-commerce Website: $7,500 - $15,000 (6-8 weeks)
 
-KEY SERVICES:
-• Digital Marketing (PPC, Social Media, Email Marketing)
-• SEO & Content Marketing
-• Web Design & Development
-• E-commerce Solutions
-• Branding & Creative Services
+DIGITAL MARKETING:
+- PPC Management: $1,500 - $3,000/month (plus ad spend)
+- SEO Services: $1,200 - $2,500/month
+- Social Media Management: $800 - $2,000/month
+
+PACKAGES:
+- Digital Starter: $2,500/month (6-month minimum)
+- Business Growth: $4,500/month (6-month minimum)
+- Enterprise: Custom pricing
+
+SALES PROCESS:
+1. Discovery Consultation (30-60 minutes) - FREE
+2. Strategy Development (3-5 business days)
+3. Proposal & Agreement (1-2 business days)
+4. Onboarding & Setup (1-2 weeks)
+5. Execution & Optimization (ongoing)
+
+YOUR ROLE:
+- Provide accurate, specific pricing when asked
+- Use a professional yet friendly, conversational tone as Justin's representative
+- Always prioritize booking consultation calls for detailed discussions
+- Share specific results and success stories when relevant
+- Keep responses under 200 words when possible
+
+KEY RESULTS TO MENTION:
+- Average 150% increase in patient inquiries (healthcare)
+- 40% improvement in online visibility
+- 25% increase in appointment bookings
 
 RESPONSE GUIDELINES:
-- For pricing: "Costs vary based on project scope. Let's book a call to discuss your specific needs!"
-- For complex questions: Provide brief answer + suggest booking call
+- For pricing: Give specific ranges and suggest booking a call for custom quotes
+- For complex questions: Provide detailed answer + suggest booking call
 - Always be helpful and guide toward consultation booking
 - Use "we" when referring to Brandastic
+- Mention Justin and the team when appropriate
 - End responses with a question when appropriate to keep conversation flowing
 
 BOOKING CALLS:
-When users show interest in services or ask about pricing, proactively suggest booking a consultation call. Say something like "Would you like to schedule a quick call to discuss this further?"`;
+When users show interest in services or ask about pricing, proactively suggest booking a consultation call. Say something like "Would you like to schedule a quick call with Justin and our team to discuss this further?"
+
+INDUSTRY EXPERTISE:
+We specialize in healthcare, professional services, e-commerce, real estate, and more. Mention relevant industry experience when applicable.`;
   }
 
   analyzeResponse(botResponse, userMessage) {
@@ -117,12 +142,16 @@ When users show interest in services or ask about pricing, proactively suggest b
     const lowerMessage = userMessage.toLowerCase();
     
     // Check if response suggests booking a call
-    const bookingKeywords = ['book', 'call', 'schedule', 'consultation', 'discuss'];
+    const bookingKeywords = ['book', 'call', 'schedule', 'consultation', 'discuss', 'justin'];
     const suggestsBooking = bookingKeywords.some(keyword => lowerResponse.includes(keyword));
     
     // Check if user is asking about pricing
-    const pricingKeywords = ['cost', 'price', 'pricing', 'expensive', 'budget', 'fee'];
+    const pricingKeywords = ['cost', 'price', 'pricing', 'expensive', 'budget', 'fee', 'how much'];
     const askingAboutPricing = pricingKeywords.some(keyword => lowerMessage.includes(keyword));
+    
+    // Check if asking about specific services
+    const serviceKeywords = ['website', 'seo', 'ppc', 'social media', 'marketing', 'design', 'ecommerce'];
+    const askingAboutServices = serviceKeywords.some(keyword => lowerMessage.includes(keyword));
     
     if (suggestsBooking || askingAboutPricing) {
       return {
@@ -131,11 +160,7 @@ When users show interest in services or ask about pricing, proactively suggest b
       };
     }
     
-    // Check if it's a general service question
-    const serviceKeywords = ['service', 'seo', 'marketing', 'website', 'design', 'ecommerce'];
-    const isServiceQuestion = serviceKeywords.some(keyword => lowerMessage.includes(keyword));
-    
-    if (isServiceQuestion) {
+    if (askingAboutServices) {
       return {
         type: 'service_info',
         suggestedAction: 'learn_more'
@@ -150,7 +175,7 @@ When users show interest in services or ask about pricing, proactively suggest b
 
   getFallbackResponse(conversationId) {
     return {
-      message: "I'm having a bit of trouble right now, but I'd love to help you learn about Brandastic's services! Let's schedule a quick call so we can discuss your needs directly.",
+      message: "I'm having a bit of trouble right now, but I'd love to help you learn about Brandastic's services! Let's schedule a quick call with Justin and our team so we can discuss your needs directly.",
       type: 'error',
       suggestedAction: 'book_call',
       conversationId,
@@ -171,7 +196,10 @@ When users show interest in services or ask about pricing, proactively suggest b
       'what do you do',
       'how long',
       'ecommerce',
-      'seo'
+      'seo',
+      'website cost',
+      'marketing cost',
+      'sales process'
     ];
     
     const lowerMessage = message.toLowerCase();
