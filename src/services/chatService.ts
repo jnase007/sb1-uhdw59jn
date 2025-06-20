@@ -2,7 +2,7 @@ export class ChatService {
   private apiUrl: string;
 
   constructor() {
-    this.apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    this.apiUrl = import.meta.env.VITE_API_URL || '';
   }
 
   async sendMessage(message: string, conversationId: string) {

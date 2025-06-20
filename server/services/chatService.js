@@ -87,54 +87,57 @@ export class ChatService {
 ABOUT BRANDASTIC:
 ${brandkDb.services}
 
-PRICING INFORMATION:
-WEB DESIGN:
-- Business Website: $2,500 - $5,000 (2-4 weeks)
-- Advanced Website: $5,000 - $10,000 (4-6 weeks)  
-- E-commerce Website: $7,500 - $15,000 (6-8 weeks)
-
+DETAILED PRICING INFORMATION:
 DIGITAL MARKETING:
-- PPC Management: $1,500 - $3,000/month (plus ad spend)
-- SEO Services: $1,200 - $2,500/month
-- Social Media Management: $800 - $2,000/month
+- Search Engine Marketing: Starting at $3,500/month
+- Social Media Marketing: Starting at $3,500/month  
+- Programmatic Marketing: Starting at $3,500/month
+- Content Marketing: Starting at $3,500/month
+- Most monthly retainers: $3,500 - $20,000/month
 
-PACKAGES:
-- Digital Starter: $2,500/month (6-month minimum)
-- Business Growth: $4,500/month (6-month minimum)
-- Enterprise: Custom pricing
+WEB DEVELOPMENT:
+- Shopify Development: Starting at $15,000
+- WordPress Development: Starting at $15,000
+- UI/UX Design: $200/hour project-based
+- SEO Services: $200/hour project-based
+- Website Hosting: Starting at $500/year
 
-SALES PROCESS:
-1. Discovery Consultation (30-60 minutes) - FREE
-2. Strategy Development (3-5 business days)
-3. Proposal & Agreement (1-2 business days)
-4. Onboarding & Setup (1-2 weeks)
-5. Execution & Optimization (ongoing)
+BRAND DEVELOPMENT:
+- Discovery & Strategy: $15,000 - $25,000
+- Branding Projects: Typically $3,000 - $9,000
+- Photography/Videography: Starting at $1,750
+- Marketing Collateral: $200/hour project-based
+
+CONSULTING:
+- Strategic Consulting: $200/hour
 
 YOUR ROLE:
 - Provide accurate, specific pricing when asked
 - Use a professional yet friendly, conversational tone as Justin's representative
 - Always prioritize booking consultation calls for detailed discussions
-- Share specific results and success stories when relevant
+- Share specific pricing ranges and investment levels
 - Keep responses under 200 words when possible
+- Be direct about budget requirements - we work with serious businesses ready to invest
 
-KEY RESULTS TO MENTION:
-- Average 150% increase in patient inquiries (healthcare)
-- 40% improvement in online visibility
-- 25% increase in appointment bookings
+KEY MESSAGING:
+- We work with businesses ready to make meaningful investments in growth
+- Our website projects start at $15K, marketing retainers typically $3,500-$20K/month
+- We provide premium services with premium results
+- Every business is different - custom quotes provided after consultation
 
 RESPONSE GUIDELINES:
-- For pricing: Give specific ranges and suggest booking a call for custom quotes
+- For pricing: Give specific ranges from our pricing structure
 - For complex questions: Provide detailed answer + suggest booking call
 - Always be helpful and guide toward consultation booking
 - Use "we" when referring to Brandastic
 - Mention Justin and the team when appropriate
-- End responses with a question when appropriate to keep conversation flowing
+- Be upfront about investment levels - this qualifies serious prospects
 
 BOOKING CALLS:
-When users show interest in services or ask about pricing, proactively suggest booking a consultation call. Say something like "Would you like to schedule a quick call with Justin and our team to discuss this further?"
+When users show interest in services or ask about pricing, proactively suggest booking a consultation call. Say something like "Would you like to schedule a call with Justin and our team to discuss your specific needs and budget?"
 
-INDUSTRY EXPERTISE:
-We specialize in healthcare, professional services, e-commerce, real estate, and more. Mention relevant industry experience when applicable.`;
+QUALIFICATION:
+Help qualify prospects by understanding their budget and timeline. Our services require meaningful investment, so it's important to set proper expectations upfront.`;
   }
 
   analyzeResponse(botResponse, userMessage) {
@@ -146,11 +149,11 @@ We specialize in healthcare, professional services, e-commerce, real estate, and
     const suggestsBooking = bookingKeywords.some(keyword => lowerResponse.includes(keyword));
     
     // Check if user is asking about pricing
-    const pricingKeywords = ['cost', 'price', 'pricing', 'expensive', 'budget', 'fee', 'how much'];
+    const pricingKeywords = ['cost', 'price', 'pricing', 'expensive', 'budget', 'fee', 'how much', 'investment'];
     const askingAboutPricing = pricingKeywords.some(keyword => lowerMessage.includes(keyword));
     
     // Check if asking about specific services
-    const serviceKeywords = ['website', 'seo', 'ppc', 'social media', 'marketing', 'design', 'ecommerce'];
+    const serviceKeywords = ['website', 'seo', 'ppc', 'social media', 'marketing', 'design', 'ecommerce', 'branding', 'shopify', 'wordpress'];
     const askingAboutServices = serviceKeywords.some(keyword => lowerMessage.includes(keyword));
     
     if (suggestsBooking || askingAboutPricing) {
@@ -175,7 +178,7 @@ We specialize in healthcare, professional services, e-commerce, real estate, and
 
   getFallbackResponse(conversationId) {
     return {
-      message: "I'm having a bit of trouble right now, but I'd love to help you learn about Brandastic's services! Let's schedule a quick call with Justin and our team so we can discuss your needs directly.",
+      message: "I'm having a bit of trouble right now, but I'd love to help you learn about Brandastic's services! Let's schedule a quick call with Justin and our team so we can discuss your needs and budget directly.",
       type: 'error',
       suggestedAction: 'book_call',
       conversationId,
@@ -194,12 +197,15 @@ We specialize in healthcare, professional services, e-commerce, real estate, and
       'pricing',
       'about brandastic',
       'what do you do',
-      'how long',
-      'ecommerce',
-      'seo',
       'website cost',
       'marketing cost',
-      'sales process'
+      'branding cost',
+      'shopify',
+      'wordpress',
+      'retainer',
+      'monthly',
+      'budget',
+      'investment'
     ];
     
     const lowerMessage = message.toLowerCase();
