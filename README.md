@@ -6,7 +6,7 @@ A production-ready chatbot system for Brandastic.com that integrates with the Ch
 
 - **AI-Powered Conversations**: Uses OpenAI's GPT-3.5-turbo for natural language understanding
 - **Service Knowledge Base**: Pre-loaded with Brandastic's service information
-- **Booking Integration**: Seamless calendar integration for consultation scheduling
+- **Booking Integration**: Direct Google Calendar integration for consultation scheduling
 - **Professional Design**: Modern, responsive widget matching Brandastic's aesthetic
 - **Security & Privacy**: Rate limiting, input validation, and data privacy compliance
 - **Mobile Responsive**: Optimized for all device sizes
@@ -32,7 +32,7 @@ A production-ready chatbot system for Brandastic.com that integrates with the Ch
 ### Prerequisites
 - Node.js 18+ installed
 - OpenAI API key
-- (Optional) Calendly account for booking integration
+- Google Calendar booking link
 
 ### 1. Environment Setup
 
@@ -55,10 +55,6 @@ NODE_ENV=development
 
 # Security
 CORS_ORIGIN=http://localhost:5173
-
-# Optional: Calendly Integration
-CALENDLY_ACCESS_TOKEN=your_calendly_access_token_here
-CALENDLY_USER_URI=https://api.calendly.com/users/your_user_id
 ```
 
 ### 2. Installation
@@ -76,16 +72,9 @@ npm install
 4. Click "Create new secret key"
 5. Copy the key and add it to your `.env` file
 
-### 4. Calendly Setup (Optional)
+### 4. Google Calendar Setup
 
-For custom Calendly integration:
-
-1. Create a [Calendly Developer account](https://developer.calendly.com/)
-2. Generate a Personal Access Token
-3. Get your User URI from the API
-4. Add both to your `.env` file
-
-**Simple Setup**: Just update line 31 in `server/services/bookingService.js` with your public Calendly link.
+Update the Google Calendar booking link in `server/services/bookingService.js` (line 18) with your actual booking URL.
 
 ### 5. Running the Application
 
@@ -157,16 +146,21 @@ Edit `server/data/knowledgeBase.js` to update:
 - Service descriptions
 - FAQ responses
 - Company information
+- Discovery questions
 
 ### Modifying the System Prompt
 
-Update the system prompt in `server/services/chatService.js` (line 78) to adjust the bot's personality and responses.
+Update the system prompt in `server/services/chatService.js` to adjust Brandi's personality and responses.
 
 ### Styling Customization
 
 Update colors and styling in:
 - `src/components/ChatWidget.tsx` - Main widget styles
 - `tailwind.config.js` - Global theme configuration
+
+### Updating Google Calendar Link
+
+Update the booking URL in `server/services/bookingService.js` with your Google Calendar appointment scheduling link.
 
 ## API Endpoints
 
@@ -210,7 +204,7 @@ Production errors are logged to the console. Consider integrating services like:
 ## Cost Optimization
 
 - **Response Caching**: Common queries cached for 1 hour
-- **Token Limits**: Responses limited to 300 tokens
+- **Token Limits**: Responses limited to 400 tokens
 - **Conversation Pruning**: Only last 10 messages kept in context
 - **Smart Fallbacks**: Reduced API calls through intelligent routing
 
@@ -231,7 +225,7 @@ Production errors are logged to the console. Consider integrating services like:
    - Adjust in `.env`: `RATE_LIMIT_MAX_REQUESTS=100`
 
 4. **Booking Form Not Working**
-   - Update Calendly URL in `server/services/bookingService.js`
+   - Update Google Calendar URL in `server/services/bookingService.js`
    - Check network requests in browser developer tools
 
 ### Performance Issues
@@ -266,7 +260,7 @@ For support with setup or customization:
 - [ ] Rate limiting configured appropriately
 - [ ] Error monitoring setup
 - [ ] Conversation logging configured
-- [ ] Calendly integration tested
+- [ ] Google Calendar booking link updated
 - [ ] Mobile responsiveness verified
 - [ ] Security headers implemented
 - [ ] Performance optimization tested

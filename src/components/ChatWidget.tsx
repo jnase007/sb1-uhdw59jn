@@ -8,7 +8,7 @@ interface Message {
   text: string;
   isBot: boolean;
   timestamp: Date;
-  type?: 'text' | 'booking_prompt' | 'error';
+  type?: 'text' | 'booking_prompt' | 'error' | 'service_inquiry' | 'service_info' | 'general' | 'discovery';
   suggestedAction?: 'book_call' | 'learn_more' | null;
 }
 
@@ -29,10 +29,10 @@ export const ChatWidget: React.FC = () => {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: Message = {
         id: 'welcome',
-        text: "Hi! I'm here to help you explore Brandastic's digital marketing and web design services. What can I help you with today?",
+        text: "Hi! I'm Brandi, and I'm here to help you explore how Brandastic can help grow your business. What type of business do you have, and what's your biggest challenge in attracting new customers right now?",
         isBot: true,
         timestamp: new Date(),
-        type: 'text'
+        type: 'discovery'
       };
       setMessages([welcomeMessage]);
     }
@@ -68,12 +68,15 @@ export const ChatWidget: React.FC = () => {
     try {
       const response = await chatService.sendMessage(inputValue, conversationId);
       
+      // Determine if this is actually an error or just a fallback response
+      const isActualError = response.type === 'error' && response.message.includes('trouble connecting');
+      
       const botMessage: Message = {
         id: `bot_${Date.now()}`,
         text: response.message,
         isBot: true,
         timestamp: new Date(),
-        type: response.type === 'error' ? 'error' : 'text',
+        type: isActualError ? 'error' : (response.type || 'text'),
         suggestedAction: response.suggestedAction
       };
 
@@ -84,7 +87,7 @@ export const ChatWidget: React.FC = () => {
       
       const errorMessage: Message = {
         id: `error_${Date.now()}`,
-        text: "I'm having trouble right now, but I'd love to help! Let's schedule a call so we can discuss your needs directly.",
+        text: "I'm having trouble connecting right now, but I'd love to help! Let's schedule a call so we can discuss your needs directly.",
         isBot: true,
         timestamp: new Date(),
         type: 'error',
@@ -163,8 +166,8 @@ export const ChatWidget: React.FC = () => {
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/30 flex-shrink-0">
                 <img 
-                  src="https://brandastic.com/wp-content/uploads/2025/01/justin-portrait@2x.png.webp" 
-                  alt="Justin - Brandastic President"
+                  src="https://vnoqmswsvpzqztvpmmlq.supabase.co/storage/v1/object/public/images//brandbot.png" 
+                  alt="Brandi - Brandastic Assistant"
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     // Fallback to icon if image fails to load
@@ -179,8 +182,8 @@ export const ChatWidget: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="font-semibold">Brandastic Assistant</h3>
-                <p className="text-xs opacity-90">Chat with Justin & the team</p>
+                <h3 className="font-semibold">Brandi</h3>
+                <p className="text-xs opacity-90">Brandastic Assistant</p>
               </div>
             </div>
             <button
@@ -212,7 +215,7 @@ export const ChatWidget: React.FC = () => {
                     max-w-[80%] rounded-lg px-4 py-2 text-sm
                     ${message.isBot
                       ? message.type === 'error'
-                        ? 'bg-red-100 text-red-800 border border-red-200'
+                        ? 'bg-orange-50 text-orange-800 border border-orange-200'
                         : 'bg-white text-gray-800 shadow-sm border'
                       : 'bg-gradient-to-r from-blue-600 to-teal-600 text-white'
                     }
@@ -282,16 +285,16 @@ export const ChatWidget: React.FC = () => {
             {/* Quick Actions */}
             <div className="flex space-x-2 mt-2">
               <button
-                onClick={() => setInputValue("What services do you offer?")}
+                onClick={() => setInputValue("I need help with digital marketing")}
                 className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-md text-gray-600 transition-colors"
               >
-                Our Services
+                Marketing
               </button>
               <button
-                onClick={() => setInputValue("How much does a website cost?")}
+                onClick={() => setInputValue("I need a new website")}
                 className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-md text-gray-600 transition-colors"
               >
-                Pricing
+                Website
               </button>
               <button
                 onClick={handleBookingClick}

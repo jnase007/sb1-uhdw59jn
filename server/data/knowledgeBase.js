@@ -2,13 +2,12 @@ export const brandkDb = {
   services: `
 BRANDASTIC SERVICES OVERVIEW:
 
-DIGITAL MARKETING - Starting at $3,500/mo
+DIGITAL MARKETING - Starting at $2,900/mo
 - Search Engine Marketing (PPC, Google Ads, Facebook, Instagram)
 - Social Media Marketing & Management
 - Programmatic Marketing & Display Advertising
 - Content Marketing Strategy & Creation
-- Email Marketing Campaigns
-- Conversion Rate Optimization
+- Consulting - Starting at $200/hr
 
 BRAND DEVELOPMENT:
 - Discovery & Strategy - Typically $15K-25K
@@ -24,17 +23,6 @@ WEB DESIGN & DEVELOPMENT:
 - Conversion Rate Optimization - $200/hr project by project
 - Search Engine Optimization - $200/hr project by project
 
-CONSULTING SERVICES:
-- Strategic Consulting - Starting at $200/hr
-- Marketing Consultation & Strategy Development
-- Digital Transformation Consulting
-
-PRICING RANGES:
-- Most monthly marketing retainers: $3,500/mo - $20,000/mo
-- Website projects: Starting from $15K
-- Hourly consulting: $200/hr
-- Photography/Videography: Starting at $1,750
-
 INDUSTRIES WE SERVE:
 - Healthcare & Medical
 - Professional Services (Legal, Accounting, Consulting)
@@ -45,143 +33,59 @@ INDUSTRIES WE SERVE:
 - Manufacturing & Industrial
 `,
 
-  detailedPricing: {
-    digitalMarketing: {
-      searchEngineMarketing: {
-        name: "Search Engine Marketing",
-        url: "https://brandastic.com/search-engine-marketing/",
-        startingPrice: "$3,500/month",
-        description: "Comprehensive PPC advertising across Google, Bing, Facebook, and Instagram"
-      },
-      socialMediaMarketing: {
-        name: "Social Media Marketing", 
-        url: "https://brandastic.com/social-media-marketing/",
-        startingPrice: "$3,500/month",
-        description: "Full-service social media management and advertising"
-      },
-      programmaticMarketing: {
-        name: "Programmatic Marketing",
-        url: "https://brandastic.com/programmatic-marketing/",
-        startingPrice: "$3,500/month", 
-        description: "Automated display advertising and audience targeting"
-      },
-      contentMarketing: {
-        name: "Content Marketing",
-        url: "https://brandastic.com/content-marketing/",
-        startingPrice: "$3,500/month",
-        description: "Strategic content creation and distribution"
-      }
-    },
+  discoveryQuestions: {
+    initial: [
+      "What type of business do you have?",
+      "What's your biggest challenge in attracting new customers right now?",
+      "Are you looking to improve your current marketing or start from scratch?",
+      "What's driving you to explore marketing services right now?"
+    ],
     
-    brandDevelopment: {
-      discoveryStrategy: {
-        name: "Discovery & Strategy",
-        url: "https://brandastic.com/discovery-strategy/",
-        priceRange: "$15,000 - $25,000",
-        description: "Comprehensive brand discovery and strategic planning"
-      },
-      photographyVideography: {
-        name: "Photography and Videography",
-        url: "https://brandastic.com/photography-and-videography/",
-        startingPrice: "$1,750",
-        description: "Professional photography and video production services"
-      },
-      branding: {
-        name: "Branding",
-        url: "https://brandastic.com/branding/",
-        hourlyRate: "$200/hour",
-        typicalRange: "$3,000 - $9,000",
-        description: "Complete brand identity development with three service tiers"
-      },
-      marketingCollateral: {
-        name: "Marketing Collateral",
-        url: "https://brandastic.com/marketing-collateral/",
-        hourlyRate: "$200/hour",
-        description: "Custom marketing materials and brand assets"
-      }
-    },
+    digitalMarketing: [
+      "Are you currently running any digital advertising campaigns?",
+      "What's your target audience - who are your ideal customers?",
+      "Which marketing channels are most important for your business?",
+      "What does success look like for your marketing efforts?"
+    ],
     
-    webDevelopment: {
-      shopify: {
-        name: "Shopify Development",
-        url: "https://brandastic.com/shopify/",
-        startingPrice: "$15,000",
-        description: "Custom Shopify e-commerce website development"
-      },
-      wordpress: {
-        name: "WordPress Development", 
-        url: "https://brandastic.com/wordpress/",
-        startingPrice: "$15,000",
-        description: "Custom WordPress website development"
-      },
-      hosting: {
-        name: "Website Hosting",
-        url: "https://brandastic.com/hosting/",
-        startingPrice: "$500/year",
-        description: "Reliable, secure website hosting services"
-      },
-      uiUxDesign: {
-        name: "Web Design (UI/UX)",
-        url: "https://brandastic.com/ui-ux-design/",
-        hourlyRate: "$200/hour",
-        description: "User interface and user experience design"
-      },
-      cro: {
-        name: "Conversion Rate Optimization",
-        url: "https://brandastic.com/conversion-rate-optimization/",
-        hourlyRate: "$200/hour", 
-        description: "Website optimization to improve conversion rates"
-      },
-      seo: {
-        name: "Search Engine Optimization",
-        url: "https://brandastic.com/search-engine-optimization/",
-        hourlyRate: "$200/hour",
-        description: "Comprehensive SEO services to improve search rankings"
-      }
-    },
+    webDevelopment: [
+      "Do you currently have a website? How's it performing for you?",
+      "Are you looking to sell products online or generate leads?",
+      "What's the main goal for your new website?",
+      "Who is your target audience and what do they need from your site?"
+    ],
     
-    consulting: {
-      name: "Strategic Consulting",
-      url: "https://brandastic.com/consultation/",
-      hourlyRate: "$200/hour",
-      description: "Expert marketing and business strategy consultation"
-    },
-    
-    retainerRanges: {
-      typical: "$3,500 - $20,000/month",
-      description: "Most monthly marketing retainers fall within this range based on scope and services included"
-    }
+    branding: [
+      "Are you a new business or looking to rebrand?",
+      "What's not working with your current brand identity?",
+      "How do you want customers to perceive your business?",
+      "What makes your business different from competitors?"
+    ]
   },
 
   faqs: {
-    "what services do you offer": "We offer comprehensive digital marketing services including Search Engine Marketing (starting at $3,500/mo), Social Media Marketing, Web Development (Shopify/WordPress starting at $15K), Branding ($3K-$9K typically), and Strategic Consulting ($200/hr). Our monthly retainers typically range from $3,500-$20,000/month.",
+    "what services do you offer": "We help businesses grow through three main areas: Digital Marketing (search engine marketing, social media, content marketing), Web Development (custom websites, e-commerce, optimization), and Brand Development (strategy, design, photography). What type of growth are you looking to achieve for your business?",
     
-    "how much do your services cost": "Our pricing varies by service: Digital Marketing starts at $3,500/month, Website projects start at $15K, Branding typically runs $3K-$9K, and Consulting is $200/hour. Most monthly retainers range from $3,500-$20,000/month. Let's schedule a call to discuss your specific needs and provide a custom quote!",
+    "digital marketing": "Our digital marketing services include search engine marketing, social media management, programmatic advertising, and content marketing. What's your biggest challenge in attracting new customers right now? Are you currently doing any marketing, or would this be a fresh start?",
     
-    "website pricing": "Website development starts at $15,000 for both Shopify and WordPress projects. This includes custom design, development, mobile optimization, and initial setup. Additional services like UI/UX design and SEO are available at $200/hour. Would you like to discuss your specific website needs?",
+    "website": "We create custom websites that drive results - both WordPress and Shopify solutions. Do you currently have a website? What's the main goal you want to achieve with your site - generate leads, sell products, or build credibility?",
     
-    "digital marketing pricing": "Our digital marketing services start at $3,500/month and include Search Engine Marketing, Social Media Marketing, Programmatic Marketing, and Content Marketing. Most clients invest between $3,500-$20,000/month depending on their goals and scope. What's your current marketing budget?",
+    "branding": "We help businesses develop strong brand identities through strategy, design, photography, and marketing materials. Are you a new business needing a complete brand, or looking to refresh your current brand? What's driving this need right now?",
     
-    "branding costs": "Branding projects typically range from $3,000-$9,000 with three different service tiers available. We also offer project-based work at $200/hour. This includes brand strategy, logo design, visual identity, and brand guidelines. Photography and videography start at $1,750.",
+    "how much does it cost": "Great question! Our investment levels vary significantly based on your specific needs and goals. To give you accurate information, I'd love to understand more about your business first. What type of services are you most interested in - marketing, website development, or branding?",
     
-    "monthly retainer pricing": "Most of our monthly marketing retainers range from $3,500 to $20,000 per month, depending on the services included and scope of work. This typically covers ongoing digital marketing, content creation, campaign management, and reporting.",
+    "pricing": "I'd be happy to discuss investment levels once I understand your needs better. Are you looking for ongoing marketing support, a new website, or brand development? What's your timeline for getting started?",
     
-    "do you work with ecommerce businesses": "Absolutely! We specialize in Shopify development starting at $15K, plus comprehensive e-commerce marketing including PPC, social media, and conversion optimization. We've helped many online retailers scale their businesses.",
+    "budget": "Budget is definitely important to discuss! Different services have different investment levels, and we want to make sure we're aligned. What type of project are you considering? And what's driving this need for your business right now?",
     
-    "what makes brandastic different": "We combine strategic thinking with creative execution and data-driven results. With services ranging from $15K website projects to $20K/month retainers, we work with businesses ready to make serious investments in their growth. Our team includes specialists in every area of digital marketing.",
+    "consultation": "Absolutely! A consultation with Justin and our team is the best way to understand your needs and explore how we can help. What's the main challenge or opportunity you'd like to discuss? This helps us prepare for our conversation.",
     
-    "do you offer seo services": "Yes! We provide SEO services at $200/hour on a project basis, or as part of our comprehensive digital marketing retainers ($3,500-$20K/month). Our SEO work includes technical optimization, content strategy, and ongoing performance monitoring.",
+    "about brandastic": "Brandastic is a full-service digital marketing and web design agency. We work with businesses across many industries to drive growth through strategic marketing, high-converting websites, and strong brand development. What type of business do you have? I'd love to learn more about your goals.",
     
-    "consultation pricing": "Our strategic consulting starts at $200/hour. We also offer a comprehensive Discovery & Strategy process for $15K-$25K that includes deep business analysis, market research, and strategic planning. Would you like to start with a consultation call?",
+    "industries": "We work with healthcare, professional services, e-commerce, real estate, technology, restaurants, and many other industries. Each business has unique needs, which is why we always start by understanding your specific situation. What industry are you in?",
     
-    "photography and video costs": "Our photography and videography services start at $1,750. This includes professional shoots for marketing materials, websites, and social media content. Pricing varies based on scope, location, and deliverables needed.",
+    "results": "We focus on measurable results that matter to your business - whether that's more leads, increased sales, or better brand recognition. What does success look like for your business? What metrics matter most to you?",
     
-    "hosting services": "We offer reliable website hosting starting at $500/year. This includes security monitoring, regular backups, performance optimization, and technical support. Hosting is often included as part of our website development packages.",
-    
-    "what industries do you work with": "We work across many industries including healthcare, professional services, e-commerce, real estate, technology, restaurants, and manufacturing. Each industry has unique needs, and we tailor our approach accordingly.",
-    
-    "minimum budget requirements": "Our services typically start at $3,500/month for digital marketing or $15K for website projects. We work with businesses ready to make meaningful investments in their growth. What's your budget range for this project?",
-    
-    "discovery and strategy process": "Our Discovery & Strategy process runs $15K-$25K and includes comprehensive business analysis, competitive research, target audience development, and strategic planning. This forms the foundation for all our marketing efforts."
+    "timeline": "Timelines vary based on the scope of work. Some projects can start immediately, while others require more planning. What's driving your timeline? Do you have any specific deadlines or goals you're working toward?"
   }
 };

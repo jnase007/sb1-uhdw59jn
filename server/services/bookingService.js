@@ -1,14 +1,10 @@
 export class BookingService {
   constructor() {
-    this.calendlyAccessToken = process.env.CALENDLY_ACCESS_TOKEN;
-    this.calendlyUserUri = process.env.CALENDLY_USER_URI;
+    // Using Google Calendar link directly - no external API needed
   }
 
   async scheduleConsultation({ name, email, preferredTime, message, phone }) {
     try {
-      // For this demo, we'll return a Google Calendar link
-      // In production, you'd integrate with Google Calendar API or your preferred booking system
-      
       const bookingData = {
         name,
         email,
@@ -18,7 +14,7 @@ export class BookingService {
         timestamp: new Date().toISOString()
       };
 
-      // Log booking request (you might want to save this to a database)
+      // Log booking request for internal tracking
       console.log('Booking Request:', bookingData);
 
       // Return Google Calendar booking link
@@ -36,7 +32,7 @@ export class BookingService {
   }
 
   async getAvailability() {
-    // In a real implementation, this would fetch from Google Calendar API
+    // Return general availability info since we're using Google Calendar
     return {
       nextAvailable: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       timezone: 'America/New_York',

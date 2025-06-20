@@ -4,9 +4,27 @@ import { brandkDb } from '../data/knowledgeBase.js';
 
 export class ChatService {
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    // Check if OpenAI API key is available
+    const apiKey = process.env.OPENAI_API_KEY;
+    console.log('🔑 Checking OpenAI API Key...');
+    console.log('Key exists:', !!apiKey);
+    console.log('Key starts with sk-:', apiKey?.startsWith('sk-'));
+    console.log('Key length:', apiKey?.length || 0);
+    
+    if (!apiKey || apiKey === 'your_openai_api_key_here' || apiKey === 'sk-your-actual-openai-api-key-here' || apiKey.length < 20) {
+      console.warn('⚠️  OpenAI API key not configured properly. Please set OPENAI_API_KEY in .env file');
+      this.openai = null;
+    } else {
+      try {
+        this.openai = new OpenAI({
+          apiKey: apiKey,
+        });
+        console.log('✅ OpenAI client initialized successfully');
+      } catch (error) {
+        console.error('❌ Failed to initialize OpenAI client:', error);
+        this.openai = null;
+      }
+    }
     
     // Cache for responses (TTL: 1 hour)
     this.cache = new NodeCache({ stdTTL: 3600 });
@@ -17,11 +35,20 @@ export class ChatService {
 
   async processMessage({ message, conversationId, context = {}, userAgent, ip }) {
     try {
+      console.log('📨 Processing message:', message.substring(0, 50) + '...');
+      
+      // If OpenAI is not configured, return fallback response
+      if (!this.openai) {
+        console.log('🔄 Using fallback response - OpenAI not configured');
+        return this.getFallbackResponse(conversationId, false); // false = not an error, just no API key
+      }
+
       // Check cache for common questions
       const cacheKey = this.generateCacheKey(message);
       const cachedResponse = this.cache.get(cacheKey);
       
       if (cachedResponse) {
+        console.log('💾 Returning cached response');
         return {
           ...cachedResponse,
           conversationId,
@@ -41,6 +68,8 @@ export class ChatService {
         ...conversation.slice(-10) // Keep last 10 messages for context
       ];
 
+      console.log('🤖 Calling OpenAI API...');
+
       // Call OpenAI API
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
@@ -52,6 +81,7 @@ export class ChatService {
       });
 
       const botResponse = completion.choices[0].message.content;
+      console.log('✅ OpenAI response received');
       
       // Add bot response to conversation
       conversation.push({ role: 'assistant', content: botResponse });
@@ -76,68 +106,73 @@ export class ChatService {
       return response;
 
     } catch (error) {
-      console.error('OpenAI API Error:', error);
-      return this.getFallbackResponse(conversationId);
+      console.error('❌ OpenAI API Error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        type: error.type,
+        code: error.code
+      });
+      
+      return this.getFallbackResponse(conversationId, true); // true = actual error occurred
     }
   }
 
   getSystemPrompt() {
-    return `You are Justin's AI assistant for Brandastic, a leading digital marketing and web design agency. You represent Justin (the president) and the Brandastic team.
+    return `You are Brandi, Justin's AI assistant for Brandastic, a leading digital marketing and web design agency. You represent Justin (the president) and the Brandastic team with a warm, professional personality.
 
 ABOUT BRANDASTIC:
 ${brandkDb.services}
 
-DETAILED PRICING INFORMATION:
-DIGITAL MARKETING:
-- Search Engine Marketing: Starting at $3,500/month
-- Social Media Marketing: Starting at $3,500/month  
-- Programmatic Marketing: Starting at $3,500/month
-- Content Marketing: Starting at $3,500/month
-- Most monthly retainers: $3,500 - $20,000/month
-
-WEB DEVELOPMENT:
-- Shopify Development: Starting at $15,000
-- WordPress Development: Starting at $15,000
-- UI/UX Design: $200/hour project-based
-- SEO Services: $200/hour project-based
-- Website Hosting: Starting at $500/year
-
-BRAND DEVELOPMENT:
-- Discovery & Strategy: $15,000 - $25,000
-- Branding Projects: Typically $3,000 - $9,000
-- Photography/Videography: Starting at $1,750
-- Marketing Collateral: $200/hour project-based
-
-CONSULTING:
-- Strategic Consulting: $200/hour
-
-YOUR ROLE:
-- Provide accurate, specific pricing when asked
-- Use a professional yet friendly, conversational tone as Justin's representative
+YOUR ROLE AS BRANDI - CONSULTATIVE ASSISTANT:
+- Act as a discovery consultant, not a price quoter
+- Ask thoughtful questions to understand their business and needs
+- Focus on understanding their challenges, goals, and timeline
+- Only mention specific pricing when directly pressed after understanding their needs
 - Always prioritize booking consultation calls for detailed discussions
-- Share specific pricing ranges and investment levels
-- Keep responses under 200 words when possible
-- Be direct about budget requirements - we work with serious businesses ready to invest
+- Use a professional yet friendly, conversational tone
+- Be warm and personable while maintaining professionalism
 
-KEY MESSAGING:
-- We work with businesses ready to make meaningful investments in growth
-- Our website projects start at $15K, marketing retainers typically $3,500-$20K/month
-- We provide premium services with premium results
-- Every business is different - custom quotes provided after consultation
+DISCOVERY-FIRST APPROACH:
+1. Understand their business type and industry
+2. Learn about their current challenges or goals
+3. Identify what's driving their need for services right now
+4. Understand their timeline and decision-making process
+5. THEN discuss how we can help and suggest a consultation
 
 RESPONSE GUIDELINES:
-- For pricing: Give specific ranges from our pricing structure
-- For complex questions: Provide detailed answer + suggest booking call
-- Always be helpful and guide toward consultation booking
+- Keep responses under 150 words when possible
+- Ask 1-2 thoughtful follow-up questions in each response
+- Focus on understanding before selling
+- When asked about pricing: "Great question! Investment levels vary based on your specific needs. To give you accurate information, I'd love to understand more about [your business/goals/challenges] first."
 - Use "we" when referring to Brandastic
-- Mention Justin and the team when appropriate
-- Be upfront about investment levels - this qualifies serious prospects
+- Mention Justin and the team when suggesting consultations
+- Be conversational and warm - you're Brandi, not a robot!
+
+DISCOVERY QUESTIONS TO USE:
+- "What type of business do you have?"
+- "What's your biggest challenge in attracting new customers?"
+- "What's driving you to explore [service] right now?"
+- "What does success look like for your business?"
+- "Are you currently doing any [marketing/website/branding] work?"
+- "What's your timeline for getting started?"
+
+PRICING APPROACH:
+- Only share specific pricing ranges when you've learned about their needs AND they specifically ask
+- Always frame pricing as "investment levels" 
+- Connect pricing to value: "Based on what you've shared about [their situation], here's how we typically structure our investment..."
+- Immediately follow pricing with: "Would you like to schedule a call with Justin to discuss your specific situation?"
 
 BOOKING CALLS:
-When users show interest in services or ask about pricing, proactively suggest booking a consultation call. Say something like "Would you like to schedule a call with Justin and our team to discuss your specific needs and budget?"
+When users show interest or after discovery questions, say: "This sounds like something Justin and our team would love to discuss with you. Would you like to schedule a consultation call to explore how we can help with [their specific situation]?"
 
-QUALIFICATION:
-Help qualify prospects by understanding their budget and timeline. Our services require meaningful investment, so it's important to set proper expectations upfront.`;
+PERSONALITY:
+- Warm and approachable
+- Professional but not stuffy
+- Genuinely interested in helping
+- Consultative, not pushy
+- Knowledgeable about business challenges
+
+Remember: You're Brandi - a consultative assistant who genuinely cares about understanding their business before presenting solutions. Focus on their world first!`;
   }
 
   analyzeResponse(botResponse, userMessage) {
@@ -156,16 +191,20 @@ Help qualify prospects by understanding their budget and timeline. Our services 
     const serviceKeywords = ['website', 'seo', 'ppc', 'social media', 'marketing', 'design', 'ecommerce', 'branding', 'shopify', 'wordpress'];
     const askingAboutServices = serviceKeywords.some(keyword => lowerMessage.includes(keyword));
     
-    if (suggestsBooking || askingAboutPricing) {
+    // Check if response is asking discovery questions
+    const discoveryKeywords = ['what type', 'what kind', 'tell me about', 'what\'s your', 'how are you', 'what does'];
+    const isDiscovery = discoveryKeywords.some(keyword => lowerResponse.includes(keyword));
+    
+    if (suggestsBooking || (askingAboutPricing && isDiscovery)) {
       return {
         type: 'service_inquiry',
         suggestedAction: 'book_call'
       };
     }
     
-    if (askingAboutServices) {
+    if (isDiscovery || askingAboutServices) {
       return {
-        type: 'service_info',
+        type: 'discovery',
         suggestedAction: 'learn_more'
       };
     }
@@ -176,14 +215,28 @@ Help qualify prospects by understanding their budget and timeline. Our services 
     };
   }
 
-  getFallbackResponse(conversationId) {
-    return {
-      message: "I'm having a bit of trouble right now, but I'd love to help you learn about Brandastic's services! Let's schedule a quick call with Justin and our team so we can discuss your needs and budget directly.",
-      type: 'error',
-      suggestedAction: 'book_call',
-      conversationId,
-      timestamp: new Date().toISOString()
-    };
+  getFallbackResponse(conversationId, isError = false) {
+    console.log('🔄 Returning fallback response. Is Error:', isError);
+    
+    if (isError) {
+      // Actual API error occurred
+      return {
+        message: "I'm having trouble connecting to my AI brain right now, but I'd love to help you learn about Brandastic's services! Let's schedule a quick call with Justin and our team so we can discuss your needs directly. What type of business do you have?",
+        type: 'error',
+        suggestedAction: 'book_call',
+        conversationId,
+        timestamp: new Date().toISOString()
+      };
+    } else {
+      // No API key configured, but provide helpful response
+      return {
+        message: "Hi! I'm Brandi, and I'm here to help you explore how Brandastic can help grow your business. We specialize in digital marketing, web development, and brand development. What type of business do you have, and what's your biggest challenge in attracting new customers right now?",
+        type: 'discovery',
+        suggestedAction: 'learn_more',
+        conversationId,
+        timestamp: new Date().toISOString()
+      };
+    }
   }
 
   generateCacheKey(message) {
@@ -193,19 +246,15 @@ Help qualify prospects by understanding their budget and timeline. Our services 
   isCommonQuestion(message) {
     const commonPhrases = [
       'what services',
-      'how much',
-      'pricing',
-      'about brandastic',
       'what do you do',
-      'website cost',
-      'marketing cost',
-      'branding cost',
-      'shopify',
-      'wordpress',
-      'retainer',
-      'monthly',
-      'budget',
-      'investment'
+      'about brandastic',
+      'digital marketing',
+      'website',
+      'branding',
+      'help me',
+      'tell me about',
+      'what type',
+      'how can you help'
     ];
     
     const lowerMessage = message.toLowerCase();
